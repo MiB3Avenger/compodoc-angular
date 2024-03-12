@@ -44,6 +44,7 @@ import { CoverageData } from './interfaces/coverageData.interface';
 import { LiveServerConfiguration } from './interfaces/live-server-configuration.interface';
 import { markedAcl } from '../utils/marked.acl';
 import { IComponentDep } from './compiler/angular/deps/component-dep.factory';
+import { PackageJsonInterface } from './interfaces/package-json.interface';
 
 const cwd = process.cwd();
 let startTime = new Date();
@@ -76,7 +77,7 @@ export class Application {
     /**
      * Store package.json data
      */
-    private packageJsonData = {};
+    private packageJsonData: PackageJsonInterface = <PackageJsonInterface>{};
 
     /**
      * Create a new compodoc application instance.
@@ -412,6 +413,7 @@ export class Application {
     private getMicroDependenciesData(): void {
         logger.info('Get diff dependencies data');
 
+        // @ts-ignore
         let dependenciesClass: AngularDependencies | AngularJSDependencies = AngularDependencies;
         Configuration.mainData.angularProject = true;
 
@@ -419,9 +421,11 @@ export class Application {
             logger.info('AngularJS project detected');
             Configuration.mainData.angularProject = false;
             Configuration.mainData.angularJSProject = true;
+            // @ts-ignore
             dependenciesClass = AngularJSDependencies;
         }
 
+        // @ts-ignore
         let crawler = new dependenciesClass(
             this.updatedFiles,
             {
@@ -493,6 +497,7 @@ export class Application {
          * - if in package.json
          * - if 75% of scanned files are *.js files
          */
+        // @ts-ignore
         let dependenciesClass: AngularDependencies | AngularJSDependencies = AngularDependencies;
         Configuration.mainData.angularProject = true;
 
@@ -500,9 +505,11 @@ export class Application {
             logger.info('AngularJS project detected');
             Configuration.mainData.angularProject = false;
             Configuration.mainData.angularJSProject = true;
+            // @ts-ignore
             dependenciesClass = AngularJSDependencies;
         }
 
+        // @ts-ignore
         let crawler = new dependenciesClass(
             this.files,
             {
@@ -1402,6 +1409,7 @@ export class Application {
             navTab.label = customTab.label;
 
             if (hasCustomNavTabConfig) {
+                // @ts-ignore
                 navTab.custom = true;
             }
 
@@ -2444,7 +2452,7 @@ at least one config for the 'info' or 'source' tab in --navTabConfig.`);
         });
     }
 
-    private processPage(page): Promise<void> {
+    private processPage(page): Promise<void|boolean> {
         logger.info('Process page', page.name);
 
         let htmlData = HtmlEngine.render(Configuration.mainData, page);
@@ -2967,8 +2975,10 @@ at least one config for the 'info' or 'source' tab in --navTabConfig.`);
         };
 
         watcher.on('ready', () => {
+            logger.debug('Watcher is ready...');
             if (!watcherReady) {
                 watcherReady = true;
+                // console.log(watcher);
                 watcher
                     .on('add', file => {
                         logger.debug(`File ${file} has been added`);

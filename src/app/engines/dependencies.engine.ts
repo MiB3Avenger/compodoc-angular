@@ -92,12 +92,15 @@ export class DependenciesEngine {
         };
 
         this.modules.forEach(module => {
+            // @ts-ignore
             module.declarations.forEach(declaration => {
                 mergeTypes(declaration);
             });
+            // @ts-ignore
             module.exports.forEach(expt => {
                 mergeTypes(expt);
             });
+            // @ts-ignore
             module.entryComponents.forEach(ent => {
                 mergeTypes(ent);
             });
@@ -139,6 +142,7 @@ export class DependenciesEngine {
 
     private cleanRawModulesNames() {
         this.rawModulesForOverview = this.rawModulesForOverview.map(module => {
+            // @ts-ignore
             module.name = module.name.replace('$', '');
             return module;
         });
@@ -284,66 +288,77 @@ export class DependenciesEngine {
     public update(updatedData): void {
         if (updatedData.modules.length > 0) {
             _.forEach(updatedData.modules, (module: IModuleDep) => {
+                // @ts-ignore
                 const _index = _.findIndex(this.modules, { name: module.name });
                 this.modules[_index] = module;
             });
         }
         if (updatedData.components.length > 0) {
             _.forEach(updatedData.components, (component: IComponentDep) => {
+                // @ts-ignore
                 const _index = _.findIndex(this.components, { name: component.name });
                 this.components[_index] = component;
             });
         }
         if (updatedData.controllers.length > 0) {
             _.forEach(updatedData.controllers, (controller: IControllerDep) => {
+                // @ts-ignore
                 const _index = _.findIndex(this.controllers, { name: controller.name });
                 this.controllers[_index] = controller;
             });
         }
         if (updatedData.entities.length > 0) {
             _.forEach(updatedData.entities, (entity: IControllerDep) => {
+                // @ts-ignore
                 const _index = _.findIndex(this.entities, { name: entity.name });
                 this.entities[_index] = entity;
             });
         }
         if (updatedData.directives.length > 0) {
             _.forEach(updatedData.directives, (directive: IDirectiveDep) => {
+                // @ts-ignore
                 const _index = _.findIndex(this.directives, { name: directive.name });
                 this.directives[_index] = directive;
             });
         }
         if (updatedData.injectables.length > 0) {
             _.forEach(updatedData.injectables, (injectable: IInjectableDep) => {
+                // @ts-ignore
                 const _index = _.findIndex(this.injectables, { name: injectable.name });
                 this.injectables[_index] = injectable;
             });
         }
         if (updatedData.interceptors.length > 0) {
             _.forEach(updatedData.interceptors, (interceptor: IInterceptorDep) => {
+                // @ts-ignore
                 const _index = _.findIndex(this.interceptors, { name: interceptor.name });
                 this.interceptors[_index] = interceptor;
             });
         }
         if (updatedData.guards.length > 0) {
             _.forEach(updatedData.guards, (guard: IGuardDep) => {
+                // @ts-ignore
                 const _index = _.findIndex(this.guards, { name: guard.name });
                 this.guards[_index] = guard;
             });
         }
         if (updatedData.interfaces.length > 0) {
             _.forEach(updatedData.interfaces, (int: IInterfaceDep) => {
+                // @ts-ignore
                 const _index = _.findIndex(this.interfaces, { name: int.name });
                 this.interfaces[_index] = int;
             });
         }
         if (updatedData.pipes.length > 0) {
             _.forEach(updatedData.pipes, (pipe: IPipeDep) => {
+                // @ts-ignore
                 const _index = _.findIndex(this.pipes, { name: pipe.name });
                 this.pipes[_index] = pipe;
             });
         }
         if (updatedData.classes.length > 0) {
             _.forEach(updatedData.classes, (classe: any) => {
+                // @ts-ignore
                 const _index = _.findIndex(this.classes, { name: classe.name });
                 this.classes[_index] = classe;
             });

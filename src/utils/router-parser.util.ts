@@ -15,7 +15,7 @@ const traverse = require('traverse');
 const ast = new Project();
 
 export class RouterParserUtil {
-    public scannedFiles: any[] = [];
+    public scannedFiles: readonly any[] = [];
     private routes: any[] = [];
     private incompleteRoutes = [];
     private modules = [];
@@ -217,7 +217,9 @@ export class RouterParserUtil {
                  * export const HomeRoutingModule: ModuleWithProviders = RouterModule.forChild(HOME_ROUTES);
                  */
                 if (ts.isCallExpression(node)) {
+                    // @ts-ignore
                     if (node.arguments) {
+                        // @ts-ignore
                         _.forEach(node.arguments, (argument: ts.Identifier) => {
                             _.forEach(this.routes, route => {
                                 if (
@@ -553,6 +555,7 @@ export class RouterParserUtil {
                 !Node.isVariableDeclaration(identifierDeclaration)
             ) {
                 throw new Error(
+                    // @ts-ignore
                     `Not implemented referenced declaration kind: ${identifierDeclaration.getKindName()}`
                 );
             }
@@ -765,6 +768,7 @@ export class RouterParserUtil {
                             !Node.isEnumMember(referencedDeclaration)
                         ) {
                             throw new Error(
+                                // @ts-ignore
                                 `Not implemented referenced declaration kind: ${referencedDeclaration.getKindName()}`
                             );
                         }
@@ -791,7 +795,9 @@ export class RouterParserUtil {
         const variableStatements = sourceFile.getVariableDeclaration(v => {
             let result = false;
             const type = v.compilerNode.type;
+            // @ts-ignore
             if (typeof type !== 'undefined' && typeof type.typeName !== 'undefined') {
+                // @ts-ignore
                 result = type.typeName.text === 'Routes';
             }
             return result;
@@ -858,10 +864,13 @@ export class RouterParserUtil {
                                     propertyInitializer.kind === SyntaxKind.PropertyAccessExpression
                                 ) {
                                     let lastObjectLiteralAttributeName =
+                                            // @ts-ignore
                                             propertyInitializer.name.getText(),
                                         firstObjectLiteralAttributeName;
+                                    // @ts-ignore
                                     if (propertyInitializer.expression) {
                                         firstObjectLiteralAttributeName =
+                                            // @ts-ignore
                                             propertyInitializer.expression.getText();
                                         let result =
                                             ImportsUtil.findPropertyValueInImportOrLocalVariables(
@@ -871,7 +880,9 @@ export class RouterParserUtil {
                                                 sourceFile
                                             ); // tslint:disable-line
                                         if (result !== '') {
+                                            // @ts-ignore
                                             propertyInitializer.kind = 9;
+                                            // @ts-ignore
                                             propertyInitializer.text = result;
                                         }
                                     }

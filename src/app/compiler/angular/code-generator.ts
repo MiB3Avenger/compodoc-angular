@@ -39,9 +39,11 @@ class TsKindsToText {
 
 const TsKindConversion: Array<TsKindsToText> = [
     new TsKindsToText(
+        // @ts-ignore
         node => ['"', node.text, '"'],
         [SyntaxKind.FirstLiteralToken, SyntaxKind.Identifier]
     ),
+    // @ts-ignore
     new TsKindsToText(node => ['"', node.text, '"'], [SyntaxKind.StringLiteral]),
     new TsKindsToText(node => [], [SyntaxKind.ArrayLiteralExpression]),
     new TsKindsToText(node => ['import', ' '], [SyntaxKind.ImportKeyword]),

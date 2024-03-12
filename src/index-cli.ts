@@ -210,7 +210,7 @@ Note: Certain tabs will only be shown if applicable to a given dependency`,
 
         let configExplorerResult;
 
-        let configFile: ConfigurationFileInterface = {};
+        let configFile: ConfigurationFileInterface = <ConfigurationFileInterface>{};
 
         const programOptions = program.opts();
 

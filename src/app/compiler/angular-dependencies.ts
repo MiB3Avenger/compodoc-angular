@@ -1,7 +1,7 @@
 import * as path from 'path';
 
 import * as _ from 'lodash';
-import { Project, ts, SyntaxKind } from 'ts-morph';
+import { Project, ts, SyntaxKind, JSDoc, JSDocTag } from 'ts-morph';
 
 import { IsKindType, kindToType } from '../../utils/kind-to-type';
 import { logger } from '../../utils/logger';
@@ -229,7 +229,7 @@ export class AngularDependencies extends FrameworkDependencies {
         return deps;
     }
 
-    private processClass(node, file, srcFile, outputSymbols, fileBody, astFile) {
+    private processClass(node, file, srcFile, outputSymbols, fileBody, astFile?) {
         const name = this.getSymboleName(node);
         const IO = this.getClassIO(file, srcFile, node, fileBody, astFile);
         const sourceCode = srcFile.getText();
@@ -333,7 +333,9 @@ export class AngularDependencies extends FrameworkDependencies {
                 for (i; i < len; i++) {
                     if (variableDeclarations[i].compilerNode.type) {
                         if (
+                            // @ts-ignore
                             variableDeclarations[i].compilerNode.type.typeName &&
+                            // @ts-ignore
                             variableDeclarations[i].compilerNode.type.typeName.text === 'Routes'
                         ) {
                             hasRoutesStatements = true;
@@ -353,7 +355,8 @@ export class AngularDependencies extends FrameworkDependencies {
             scannedFile = RouterParserUtil.cleanCallExpressions(astFile).compilerNode;
             scannedFile = RouterParserUtil.cleanFileDynamics(astFile).compilerNode;
 
-            scannedFile.kind = SyntaxKind.SourceFile;
+            // @ts-ignore
+            scannedFile['kind'] = SyntaxKind.SourceFile;
         }
 
         ts.forEachChild(scannedFile, (initialNode: ts.Node) => {
@@ -505,9 +508,7 @@ export class AngularDependencies extends FrameworkDependencies {
                                 standalone: this.componentHelper.getComponentStandalone(
                                     props,
                                     srcFile
-                                )
-                                    ? true
-                                    : false,
+                                ),
                                 pure: this.componentHelper.getComponentPure(props, srcFile),
                                 ngname: this.componentHelper.getComponentName(props, srcFile),
                                 sourceCode: srcFile.getText(),
@@ -708,7 +709,9 @@ export class AngularDependencies extends FrameworkDependencies {
                         }
                     } else if (ts.isModuleDeclaration(node)) {
                         if (node.body) {
+                            // @ts-ignore
                             if (node.body.statements && node.body.statements.length > 0) {
+                                // @ts-ignore
                                 node.body.statements.forEach(statement =>
                                     parseNode(file, srcFile, statement, node.body, astFile)
                                 );
@@ -758,11 +761,15 @@ export class AngularDependencies extends FrameworkDependencies {
                                     'bootstrapModule'
                                 );
                             }
+                            // @ts-ignore
                             if (typeof node.thenStatement !== 'undefined') {
                                 if (
+                                    // @ts-ignore
                                     node.thenStatement.statements &&
+                                    // @ts-ignore
                                     node.thenStatement.statements.length > 0
                                 ) {
+                                    // @ts-ignore
                                     let firstStatement = node.thenStatement.statements[0];
                                     resultNode = this.findExpressionByNameInExpressions(
                                         firstStatement.expression,
@@ -773,10 +780,13 @@ export class AngularDependencies extends FrameworkDependencies {
                             if (!resultNode) {
                                 if (
                                     node.expression &&
+                                    // @ts-ignore
                                     node.expression.arguments &&
+                                    // @ts-ignore
                                     node.expression.arguments.length > 0
                                 ) {
                                     resultNode = this.findExpressionByNameInExpressionArguments(
+                                        // @ts-ignore
                                         node.expression.arguments,
                                         'bootstrapModule'
                                     );
@@ -861,8 +871,10 @@ export class AngularDependencies extends FrameworkDependencies {
                         };
 
                         if (isDestructured) {
+                            // @ts-ignore
                             if (nodeVariableDeclarations[0].name.elements) {
                                 const destructuredVariables =
+                                    // @ts-ignore
                                     nodeVariableDeclarations[0].name.elements;
 
                                 for (let i = 0; i < destructuredVariables.length; i++) {
@@ -877,8 +889,10 @@ export class AngularDependencies extends FrameworkDependencies {
                                         file: file
                                     };
                                     if (nodeVariableDeclarations[0].initializer) {
+                                        // @ts-ignore
                                         if (nodeVariableDeclarations[0].initializer.elements) {
                                             deps.initializer =
+                                                // @ts-ignore
                                                 nodeVariableDeclarations[0].initializer.elements[i];
                                         }
                                         deps.defaultValue = deps.initializer
@@ -1175,9 +1189,12 @@ export class AngularDependencies extends FrameworkDependencies {
     ): ReadonlyArray<ts.ObjectLiteralElementLike> {
         if (
             visitedNode.expression &&
+            // @ts-ignore
             visitedNode.expression.arguments &&
+            // @ts-ignore
             visitedNode.expression.arguments.length > 0
         ) {
+            // @ts-ignore
             const pop = visitedNode.expression.arguments[0];
 
             if (pop && pop.properties && pop.properties.length >= 0) {
@@ -1186,6 +1203,7 @@ export class AngularDependencies extends FrameworkDependencies {
                 return [pop];
             } else {
                 logger.warn('Empty metadatas, trying to find it with imports.');
+                // @ts-ignore
                 return ImportsUtil.findValueInImportOrLocalVariables(pop.text, sourceFile);
             }
         }
@@ -1223,8 +1241,11 @@ export class AngularDependencies extends FrameworkDependencies {
         };
         const jsdoctags = this.jsdocParserUtil.getJSDocs(node);
 
+        // @ts-ignore
         if (jsdoctags && jsdoctags.length >= 1 && jsdoctags[0].tags) {
+            // @ts-ignore
             this.checkForDeprecation(jsdoctags[0].tags, result);
+            // @ts-ignore
             result.jsdoctags = markedtags(jsdoctags[0].tags);
         }
         return result;
@@ -1286,7 +1307,9 @@ export class AngularDependencies extends FrameworkDependencies {
             }
             const jsdoctags = this.jsdocParserUtil.getJSDocs(arg);
 
+            // @ts-ignore
             if (jsdoctags && jsdoctags.length >= 1 && jsdoctags[0].tags) {
+                // @ts-ignore
                 this.checkForDeprecation(jsdoctags[0].tags, result);
             }
             return result;
@@ -1374,9 +1397,13 @@ export class AngularDependencies extends FrameworkDependencies {
                 }
             }
         }
+        // @ts-ignore
         if (jsdoctags && jsdoctags.length >= 1 && jsdoctags[0].tags) {
+            // @ts-ignore
             this.checkForDeprecation(jsdoctags[0].tags, result);
+            // @ts-ignore
             result.jsdoctags = markedtags(jsdoctags[0].tags);
+            // @ts-ignore
             _.forEach(jsdoctags[0].tags, tag => {
                 if (tag.tagName) {
                     if (tag.tagName.text) {
@@ -1424,7 +1451,9 @@ export class AngularDependencies extends FrameworkDependencies {
                 const jsdoctags = this.jsdocParserUtil.getJSDocs(
                     node.declarationList.declarations[i]
                 );
+                // @ts-ignore
                 if (jsdoctags && jsdoctags.length >= 1 && jsdoctags[0].tags) {
+                    // @ts-ignore
                     this.checkForDeprecation(jsdoctags[0].tags, result);
                 }
                 return result;
@@ -1455,9 +1484,11 @@ export class AngularDependencies extends FrameworkDependencies {
         if (node.members) {
             let i = 0;
             let len = node.members.length;
+            // @ts-ignore
             let memberjsdoctags = [];
             for (i; i < len; i++) {
                 const member: any = {
+                    // @ts-ignore
                     name: node.members[i].name.text,
                     deprecated: false,
                     deprecationMessage: ''
@@ -1465,9 +1496,12 @@ export class AngularDependencies extends FrameworkDependencies {
                 if (node.members[i].initializer) {
                     // if the initializer kind is a number do cast to the number type
                     member.value = IsKindType.NUMBER(node.members[i].initializer.kind)
+                        // @ts-ignore
                         ? Number(node.members[i].initializer.text)
+                        // @ts-ignore
                         : node.members[i].initializer.text;
                 }
+                // @ts-ignore
                 memberjsdoctags = this.jsdocParserUtil.getJSDocs(node.members[i]);
                 if (memberjsdoctags && memberjsdoctags.length >= 1 && memberjsdoctags[0].tags) {
                     this.checkForDeprecation(memberjsdoctags[0].tags, member);
@@ -1476,7 +1510,9 @@ export class AngularDependencies extends FrameworkDependencies {
             }
         }
         const jsdoctags = this.jsdocParserUtil.getJSDocs(node);
+        // @ts-ignore
         if (jsdoctags && jsdoctags.length >= 1 && jsdoctags[0].tags) {
+            // @ts-ignore
             this.checkForDeprecation(jsdoctags[0].tags, result);
         }
         return result;

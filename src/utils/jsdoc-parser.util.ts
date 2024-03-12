@@ -24,7 +24,9 @@ export class JsdocParserUtil {
     }
 
     isTopmostModuleDeclaration(node: ts.ModuleDeclaration): boolean {
+        // @ts-ignore
         if (node.nextContainer && node.nextContainer.kind === ts.SyntaxKind.ModuleDeclaration) {
+            // @ts-ignore
             let next = <ts.ModuleDeclaration>node.nextContainer;
             if (node.name.end + 1 === next.name.pos) {
                 return false;
@@ -60,6 +62,7 @@ export class JsdocParserUtil {
             }
         }
 
+        // @ts-ignore
         const comments = _ts.getJSDocCommentRanges(node, sourceFile.text);
         if (comments && comments.length) {
             let comment: ts.CommentRange;
@@ -182,6 +185,7 @@ export class JsdocParserUtil {
         const parent = node.parent;
         const isInitializerOfVariableDeclarationInStatement =
             this.isVariableLike(parent) &&
+            // @ts-ignore
             parent.initializer === node &&
             ts.isVariableStatement(parent.parent.parent);
         const isVariableOfVariableDeclarationStatement =
@@ -218,10 +222,13 @@ export class JsdocParserUtil {
             cache = _.concat(cache, this.getJSDocParameterTags(node));
         }
 
+        // @ts-ignore
         if (this.isVariableLike(node) && node.initializer) {
+            // @ts-ignore
             cache = _.concat(cache, node.initializer.jsDoc);
         }
 
+        // @ts-ignore
         cache = _.concat(cache, node.jsDoc);
 
         return cache;
@@ -249,10 +256,15 @@ export class JsdocParserUtil {
             return _.filter(tags, tag => {
                 if (ts && ts.isJSDocParameterTag(tag)) {
                     let t: JSDocParameterTagExt = tag;
+                    // @ts-ignore
                     if (typeof t.parameterName !== 'undefined') {
+                        // @ts-ignore
                         return t.parameterName.text === name;
+                    // @ts-ignore
                     } else if (typeof t.name !== 'undefined') {
+                        // @ts-ignore
                         if (typeof t.name.escapedText !== 'undefined') {
+                            // @ts-ignore
                             return t.name.escapedText === name;
                         }
                     }

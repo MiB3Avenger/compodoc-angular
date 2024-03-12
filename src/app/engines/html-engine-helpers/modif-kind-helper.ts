@@ -13,24 +13,31 @@ export class ModifKindHelper implements IHtmlEngineHelper {
     public helperFunc(context: any, kind: SyntaxKind[]) {
         let _kindText = '';
         switch (kind) {
+            // @ts-ignore
             case SyntaxKind.PrivateKeyword:
                 _kindText = 'Private';
                 break;
+            // @ts-ignore
             case SyntaxKind.ReadonlyKeyword:
                 _kindText = 'Readonly';
                 break;
+            // @ts-ignore
             case SyntaxKind.ProtectedKeyword:
                 _kindText = 'Protected';
                 break;
+            // @ts-ignore
             case SyntaxKind.PublicKeyword:
                 _kindText = 'Public';
                 break;
+            // @ts-ignore
             case SyntaxKind.StaticKeyword:
                 _kindText = 'Static';
                 break;
+            // @ts-ignore
             case SyntaxKind.AsyncKeyword:
                 _kindText = 'Async';
                 break;
+            // @ts-ignore
             case SyntaxKind.AbstractKeyword:
                 _kindText = 'Abstract';
                 break;

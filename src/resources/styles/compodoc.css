@@ -349,7 +349,6 @@ a[href] {
 
 .menu ul.list li.chapter .simple {
     padding: 10px 15px;
-    position: relative;
 }
 
 .menu ul.list li.chapter .inner .simple {
@@ -419,6 +418,14 @@ a[href] {
 
 .menu-toggler {
     cursor: pointer;
+    position: -webkit-sticky !important;
+    position: sticky !important;;
+    top: 0;
+    z-index: 1020;
+}
+
+.links .menu-toggler {
+    z-index: 1010;
 }
 
 .menu-toggler .ion-ios-arrow-down,

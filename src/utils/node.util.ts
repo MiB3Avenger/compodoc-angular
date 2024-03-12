@@ -3,6 +3,7 @@ import { ts } from 'ts-morph';
 export function nodeHasDecorator(node: ts.Node) {
     let result = false;
 
+    // @ts-ignore
     const nodeModifiers = node.modifiers; // ts.getModifiers(node);
 
     if (nodeModifiers && nodeModifiers.length > 0) {
@@ -19,6 +20,7 @@ export function nodeHasDecorator(node: ts.Node) {
 export function getNodeDecorators(node: ts.Node) {
     let result = [];
 
+    // @ts-ignore
     const nodeModifiers = node.modifiers; // ts.getModifiers(node);
 
     if (nodeModifiers && nodeModifiers.length > 0) {

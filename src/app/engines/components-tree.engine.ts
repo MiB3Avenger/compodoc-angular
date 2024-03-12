@@ -23,7 +23,7 @@ class ComponentsTreeEngine {
         this.components.push(component);
     }
 
-    private readTemplates() {
+    private readTemplates(): Promise<void> {
         return new Promise((resolve, reject) => {
             let i = 0;
             let len = this.componentsForTree.length;
@@ -60,7 +60,7 @@ class ComponentsTreeEngine {
         });
     }
 
-    private findChildrenAndParents() {
+    private findChildrenAndParents(): Promise<void> {
         return new Promise((resolve, reject) => {
             _.forEach(this.componentsForTree, component => {
                 let $component = $(component.templateData);
@@ -75,7 +75,7 @@ class ComponentsTreeEngine {
         });
     }
 
-    private createTreesForComponents() {
+    private createTreesForComponents(): Promise<void> {
         return new Promise((resolve, reject) => {
             _.forEach(this.components, component => {
                 let _component = {
