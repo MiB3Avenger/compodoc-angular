@@ -51,3 +51,10 @@ Domain driven design + TDD refactoring
 -   parse files AST
 -   find doc informations
 -   process informations : generate doc or coverage
+
+
+#### Convert docs to be generated as an angular app
+
+- Refactor docs to be an angular app
+- Create interfaces to fix typescript issues regarding object properties not being found
+- Reduce usage of paths inside package.json
