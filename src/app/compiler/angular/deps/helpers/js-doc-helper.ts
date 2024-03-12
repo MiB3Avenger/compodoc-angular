@@ -19,7 +19,9 @@ export class JsDocHelper {
 
     private checkStatement(statement: ts.Statement, node: ts.Node): boolean {
         if (statement.pos === node.pos && statement.end === node.end) {
+            // @ts-ignore
             if (node.jsDoc && node.jsDoc.length > 0) {
+                // @ts-ignore
                 return this.checkJsDocs(node.jsDoc);
             }
         }

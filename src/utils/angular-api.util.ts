@@ -24,7 +24,8 @@ export class AngularApiUtil {
         });
         return {
             source: 'external',
-            data: foundedApi
+            data: foundedApi,
+            score: 0
         };
     }
 }

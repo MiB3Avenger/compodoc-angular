@@ -250,7 +250,9 @@ export class ClassHelper {
 
     private getPosition(node: ts.Node, sourceFile: ts.SourceFile): ts.LineAndCharacter {
         let position: ts.LineAndCharacter;
+        // @ts-ignore
         if (node.name && node.name.end) {
+            // @ts-ignore
             position = ts.getLineAndCharacterOfPosition(sourceFile, node.name.end);
         } else {
             position = ts.getLineAndCharacterOfPosition(sourceFile, node.pos);
@@ -280,7 +282,10 @@ export class ClassHelper {
                     deprecationMessage: '',
                     args: nodeAccessor.parameters.map(param => this.visitArgument(param)),
                     returnType: nodeAccessor.type ? this.visitType(nodeAccessor.type) : 'void',
-                    line: this.getPosition(nodeAccessor, sourceFile).line + 1
+                    line: this.getPosition(nodeAccessor, sourceFile).line + 1,
+                    rawdescription: '',
+                    description: '',
+                    jsdoctags: null
                 };
 
                 if (nodeAccessor.jsDoc && nodeAccessor.jsDoc.length >= 1) {
@@ -295,10 +300,14 @@ export class ClassHelper {
                     }
                 }
 
+                // @ts-ignore
                 if (jsdoctags && jsdoctags.length >= 1 && jsdoctags[0].tags) {
+                    // @ts-ignore
                     this.checkForDeprecation(jsdoctags[0].tags, setSignature);
+                    // @ts-ignore
                     setSignature.jsdoctags = markedtags(jsdoctags[0].tags);
                 }
+                // @ts-ignore
                 if (setSignature.jsdoctags && setSignature.jsdoctags.length > 0) {
                     setSignature.jsdoctags = mergeTagsAndArgs(
                         setSignature.args,
@@ -315,7 +324,10 @@ export class ClassHelper {
                     name: nodeName,
                     type: nodeAccessor.type ? kindToType(nodeAccessor.type.kind) : '',
                     returnType: nodeAccessor.type ? this.visitType(nodeAccessor.type) : '',
-                    line: this.getPosition(nodeAccessor, sourceFile).line + 1
+                    line: this.getPosition(nodeAccessor, sourceFile).line + 1,
+                    rawdescription: '',
+                    description: '',
+                    jsdoctag: null
                 };
 
                 if (nodeAccessor.jsDoc && nodeAccessor.jsDoc.length >= 1) {
@@ -330,8 +342,11 @@ export class ClassHelper {
                     }
                 }
 
+                // @ts-ignore
                 if (jsdoctags && jsdoctags.length >= 1 && jsdoctags[0].tags) {
+                    // @ts-ignore
                     this.checkForDeprecation(jsdoctags[0].tags, getSignature);
+                    // @ts-ignore
                     getSignature.jsdoctags = markedtags(jsdoctags[0].tags);
                 }
 
@@ -341,7 +356,9 @@ export class ClassHelper {
     }
 
     private isDirectiveDecorator(decorator: ts.Decorator): boolean {
+        // @ts-ignore
         if (decorator.expression.expression) {
+            // @ts-ignore
             let decoratorIdentifierText = decorator.expression.expression.text;
             return (
                 decoratorIdentifierText === 'Directive' || decoratorIdentifierText === 'Component'
@@ -488,9 +505,11 @@ export class ClassHelper {
                 if (
                     declarationsjsdoctags &&
                     declarationsjsdoctags.length >= 1 &&
+                    // @ts-ignore
                     declarationsjsdoctags[0].tags
                 ) {
                     const deprecation = { deprecated: false, deprecationMessage: '' };
+                    // @ts-ignore
                     this.checkForDeprecation(declarationsjsdoctags[0].tags, deprecation);
                     deprecated = deprecation.deprecated;
                     deprecationMessage = deprecation.deprecationMessage;
@@ -500,6 +519,7 @@ export class ClassHelper {
                 }
             }
             if (symbol.valueDeclaration) {
+                // @ts-ignore
                 jsdoctags = this.jsdocParserUtil.getJSDocs(symbol.valueDeclaration);
                 if (jsdoctags && jsdoctags.length >= 1 && jsdoctags[0].tags) {
                     const deprecation = { deprecated: false, deprecationMessage: '' };
@@ -515,7 +535,9 @@ export class ClassHelper {
         let implementsElements = [];
         let extendsElements = [];
 
+        // @ts-ignore
         if (typeof ts.getEffectiveImplementsTypeNodes !== 'undefined') {
+            // @ts-ignore
             let implementedTypes = ts.getEffectiveImplementsTypeNodes(classDeclaration);
             if (implementedTypes) {
                 let i = 0;
@@ -528,10 +550,13 @@ export class ClassHelper {
             }
         }
 
+        // @ts-ignore
         if (typeof ts.getClassExtendsHeritageElement !== 'undefined') {
             if (astFile) {
+                // @ts-ignore
                 let interfaceOrClassNode = astFile.getInterface(className);
                 if (!interfaceOrClassNode) {
+                    // @ts-ignore
                     interfaceOrClassNode = astFile.getClass(className);
                 }
                 if (interfaceOrClassNode) {
@@ -790,12 +815,14 @@ export class ClassHelper {
                             !(this.isProtected(member) && Configuration.mainData.disableProtected)
                         ) {
                             if (ts.isMethodDeclaration(member) || ts.isMethodSignature(member)) {
+                                // @ts-ignore
                                 methods.push(this.visitMethodDeclaration(member, sourceFile));
                             } else if (
                                 ts.isPropertyDeclaration(member) ||
                                 ts.isPropertySignature(member)
                             ) {
                                 if (!inputDecorator && !outputDecorator) {
+                                    // @ts-ignore
                                     properties.push(this.visitProperty(member, sourceFile));
                                 }
                             } else if (ts.isCallSignatureDeclaration(member)) {
@@ -861,7 +888,9 @@ export class ClassHelper {
         if (typeName.text) {
             return typeName.text;
         }
+        // @ts-ignore
         if (typeName.left && typeName.right) {
+            // @ts-ignore
             return this.visitTypeName(typeName.left) + '.' + this.visitTypeName(typeName.right);
         }
         return '';
@@ -915,7 +944,9 @@ export class ClassHelper {
                         }
                     } else {
                         if (ts.isLiteralTypeNode(type) && type.literal) {
+                            // @ts-ignore
                             if (type.literal.text) {
+                                // @ts-ignore
                                 _return += '"' + type.literal.text + '"';
                             } else {
                                 _return += kindToType(type.literal.kind);
@@ -969,7 +1000,9 @@ export class ClassHelper {
                             _return += kindToType(type.kind);
                         }
                         if (ts.isLiteralTypeNode(type) && type.literal) {
+                            // @ts-ignore
                             if (type.literal.text) {
+                                // @ts-ignore
                                 _return += '"' + type.literal.text + '"';
                             } else {
                                 _return += kindToType(type.literal.kind);
@@ -1010,13 +1043,17 @@ export class ClassHelper {
                 let type = node.types[i];
                 _return += kindToType(type.kind);
                 if (ts.isLiteralTypeNode(type) && type.literal) {
+                    // @ts-ignore
                     if (type.literal.text) {
+                        // @ts-ignore
                         _return += '"' + type.literal.text + '"';
                     } else {
                         _return += kindToType(type.literal.kind);
                     }
                 }
+                // @ts-ignore
                 if (type.typeName) {
+                    // @ts-ignore
                     _return += this.visitTypeName(type.typeName);
                 }
                 if (i < len - 1) {
@@ -1069,6 +1106,7 @@ export class ClassHelper {
             deprecated: false,
             deprecationMessage: ''
         };
+        // @ts-ignore
         if (method.jsDoc) {
             const comment = this.jsdocParserUtil.getMainCommentOfNode(method, sourceFile);
             const cleanedDescription = this.jsdocParserUtil.parseComment(comment);
@@ -1076,8 +1114,11 @@ export class ClassHelper {
             result.description = markedAcl(cleanedDescription);
         }
         let jsdoctags = this.jsdocParserUtil.getJSDocs(method);
+        // @ts-ignore
         if (jsdoctags && jsdoctags.length >= 1 && jsdoctags[0].tags) {
+            // @ts-ignore
             this.checkForDeprecation(jsdoctags[0].tags, result);
+            // @ts-ignore
             result.jsdoctags = markedtags(jsdoctags[0].tags);
         }
         return result;
@@ -1095,9 +1136,13 @@ export class ClassHelper {
             returnType: this.visitType(method.type),
             line: this.getPosition(method, sourceFile).line + 1,
             deprecated: false,
-            deprecationMessage: ''
+            deprecationMessage: '',
+            rawdescription: '',
+            description: '',
+            jsdoctags: null
         };
         const jsdoctags = this.jsdocParserUtil.getJSDocs(method);
+        // @ts-ignore
         if (method.jsDoc) {
             const comment = this.jsdocParserUtil.getMainCommentOfNode(method, sourceFile);
             const cleanedDescription = this.jsdocParserUtil.parseComment(comment);
@@ -1106,9 +1151,13 @@ export class ClassHelper {
         }
 
         if (jsdoctags && jsdoctags.length >= 1) {
+            // @ts-ignore
             if (jsdoctags[0].tags) {
+                // @ts-ignore
                 this.checkForDeprecation(jsdoctags[0].tags, result);
+                // @ts-ignore
                 if (method.jsDoc) {
+                    // @ts-ignore
                     result.jsdoctags = markedtags(jsdoctags[0].tags);
                 }
             }
@@ -1134,6 +1183,7 @@ export class ClassHelper {
         };
         let jsdoctags = this.jsdocParserUtil.getJSDocs(method);
 
+        // @ts-ignore
         if (method.jsDoc) {
             const comment = this.jsdocParserUtil.getMainCommentOfNode(method, sourceFile);
             const cleanedDescription = this.jsdocParserUtil.parseComment(comment);
@@ -1155,8 +1205,11 @@ export class ClassHelper {
                 result.modifierKind = kinds;
             }
         }
+        // @ts-ignore
         if (jsdoctags && jsdoctags.length >= 1 && jsdoctags[0].tags) {
+            // @ts-ignore
             this.checkForDeprecation(jsdoctags[0].tags, result);
+            // @ts-ignore
             result.jsdoctags = markedtags(jsdoctags[0].tags);
         }
         if (result.jsdoctags && result.jsdoctags.length > 0) {
@@ -1169,6 +1222,7 @@ export class ClassHelper {
 
     private visitProperty(property: ts.PropertyDeclaration, sourceFile) {
         let result: any = {
+            // @ts-ignore
             name: property.name.text,
             defaultValue: property.initializer
                 ? this.stringifyDefaultValue(property.initializer)
@@ -1186,12 +1240,15 @@ export class ClassHelper {
             result.defaultValue = '() => {...}';
         }
 
+        // @ts-ignore
         if (typeof result.name === 'undefined' && typeof property.name.expression !== 'undefined') {
+            // @ts-ignore
             result.name = property.name.expression.text;
         }
 
         jsdoctags = this.jsdocParserUtil.getJSDocs(property);
 
+        // @ts-ignore
         if (property.jsDoc) {
             const comment = this.jsdocParserUtil.getMainCommentOfNode(property, sourceFile);
             const cleanedDescription = this.jsdocParserUtil.parseComment(comment);
@@ -1235,6 +1292,7 @@ export class ClassHelper {
         }
         if (jsdoctags && jsdoctags.length >= 1 && jsdoctags[0].tags) {
             this.checkForDeprecation(jsdoctags[0].tags, result);
+            // @ts-ignore
             if (property.jsDoc) {
                 result.jsdoctags = markedtags(jsdoctags[0].tags);
             }
@@ -1298,6 +1356,7 @@ export class ClassHelper {
 
     private visitMethodDeclaration(method: ts.MethodDeclaration, sourceFile: ts.SourceFile) {
         let result: any = {
+            // @ts-ignore
             name: method.name.text,
             args: method.parameters ? method.parameters.map(prop => this.visitArgument(prop)) : [],
             optional: typeof method.questionToken !== 'undefined',
@@ -1311,7 +1370,9 @@ export class ClassHelper {
 
         if (typeof method.type === 'undefined') {
             // Try to get inferred type
+            // @ts-ignore
             if (method.symbol) {
+                // @ts-ignore
                 let symbol: ts.Symbol = method.symbol;
                 if (symbol.valueDeclaration) {
                     let symbolType = this.typeChecker.getTypeOfSymbolAtLocation(
@@ -1336,6 +1397,7 @@ export class ClassHelper {
             );
         }
 
+        // @ts-ignore
         if (method.jsDoc) {
             const comment = this.jsdocParserUtil.getMainCommentOfNode(method, sourceFile);
             const cleanedDescription = this.jsdocParserUtil.parseComment(comment);
@@ -1377,8 +1439,11 @@ export class ClassHelper {
                 result.modifierKind.push(SyntaxKind.PrivateKeyword);
             }
         }
+        // @ts-ignore
         if (jsdoctags && jsdoctags.length >= 1 && jsdoctags[0].tags) {
+            // @ts-ignore
             this.checkForDeprecation(jsdoctags[0].tags, result);
+            // @ts-ignore
             result.jsdoctags = markedtags(jsdoctags[0].tags);
         }
         if (result.jsdoctags && result.jsdoctags.length > 0) {
@@ -1394,8 +1459,10 @@ export class ClassHelper {
         outDecorator: ts.Decorator,
         sourceFile?: ts.SourceFile
     ) {
+        // @ts-ignore
         let inArgs = outDecorator.expression.arguments;
         let _return: any = {
+            // @ts-ignore
             name: inArgs.length > 0 ? inArgs[0].text : property.name.text,
             defaultValue: property.initializer
                 ? this.stringifyDefaultValue(property.initializer)
@@ -1403,6 +1470,7 @@ export class ClassHelper {
             deprecated: false,
             deprecationMessage: ''
         };
+        // @ts-ignore
         if (property.jsDoc) {
             const comment = this.jsdocParserUtil.getMainCommentOfNode(property, sourceFile);
             const jsdoctags = this.jsdocParserUtil.getJSDocs(property);
@@ -1410,14 +1478,20 @@ export class ClassHelper {
             _return.rawdescription = cleanedDescription;
             _return.description = markedAcl(cleanedDescription);
 
+            // @ts-ignore
             if (jsdoctags && jsdoctags.length >= 1 && jsdoctags[0].tags) {
+                // @ts-ignore
                 this.checkForDeprecation(jsdoctags[0].tags, _return);
+                // @ts-ignore
                 _return.jsdoctags = markedtags(jsdoctags[0].tags);
             }
         }
         if (!_return.description) {
+            // @ts-ignore
             if (property.jsDoc && property.jsDoc.length > 0) {
+                // @ts-ignore
                 if (typeof property.jsDoc[0].comment !== 'undefined') {
+                    // @ts-ignore
                     const rawDescription = property.jsDoc[0].comment;
                     _return.rawdescription = rawDescription;
                     _return.description = markedAcl(rawDescription);
@@ -1433,6 +1507,7 @@ export class ClassHelper {
             if (property.initializer) {
                 if (ts.isNewExpression(property.initializer)) {
                     if (property.initializer.expression) {
+                        // @ts-ignore
                         _return.type = property.initializer.expression.text;
                     }
                 }
@@ -1443,6 +1518,7 @@ export class ClassHelper {
 
     private visitArgument(arg: ts.ParameterDeclaration) {
         let _result: any = {
+            // @ts-ignore
             name: arg.name.text,
             type: this.visitType(arg),
             deprecated: false,
@@ -1467,7 +1543,9 @@ export class ClassHelper {
             _result.defaultValue = this.stringifyDefaultValue(arg.initializer);
         }
         const jsdoctags = this.jsdocParserUtil.getJSDocs(arg);
+        // @ts-ignore
         if (jsdoctags && jsdoctags.length >= 1 && jsdoctags[0].tags) {
+            // @ts-ignore
             this.checkForDeprecation(jsdoctags[0].tags, _result);
         }
         return _result;
@@ -1525,8 +1603,11 @@ export class ClassHelper {
                 if (property.jsDoc.length > 0) {
                     const jsdoctags = this.jsdocParserUtil.getJSDocs(property);
 
+                    // @ts-ignore
                     if (jsdoctags && jsdoctags.length >= 1 && jsdoctags[0].tags) {
+                        // @ts-ignore
                         this.checkForDeprecation(jsdoctags[0].tags, _return);
+                        // @ts-ignore
                         _return.jsdoctags = markedtags(jsdoctags[0].tags);
                     }
                     if (typeof property.jsDoc[0].comment !== 'undefined') {
@@ -1607,8 +1688,11 @@ export class ClassHelper {
             _return.rawdescription = cleanedDescription;
             _return.description = markedAcl(cleanedDescription);
 
+            // @ts-ignore
             if (jsdoctags && jsdoctags.length >= 1 && jsdoctags[0].tags) {
+                // @ts-ignore
                 this.checkForDeprecation(jsdoctags[0].tags, _return);
+                // @ts-ignore
                 _return.jsdoctags = markedtags(jsdoctags[0].tags);
             }
         }

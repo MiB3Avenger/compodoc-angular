@@ -17,6 +17,10 @@ body.dark {
     border-right: 1px solid #444;
 }
 
+.dark .menu-toggler {
+    background: #212121;
+}
+
 .dark .menu ul.list li a {
     color: #fafafa;
 }

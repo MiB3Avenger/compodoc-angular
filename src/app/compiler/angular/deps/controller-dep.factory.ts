@@ -28,7 +28,9 @@ export class ControllerDepFactory {
             deprecationMessage: IO.deprecationMessage
         };
         if (properties && properties.length === 1) {
+            // @ts-ignore
             if (properties[0].text) {
+                // @ts-ignore
                 infos.prefix = properties[0].text;
             }
         }

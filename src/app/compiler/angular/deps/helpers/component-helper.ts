@@ -293,6 +293,7 @@ export class ComponentHelper {
 
     private parseProperties(node: ReadonlyArray<ts.ObjectLiteralElementLike>): Map<string, string> {
         let obj = new Map<string, string>();
+        // @ts-ignore
         let properties = node.initializer.properties || [];
         properties.forEach(prop => {
             obj.set(prop.name.text, prop.initializer.text);
@@ -310,6 +311,7 @@ export class ComponentHelper {
             filteredProps = [];
 
         for (i; i < len; i++) {
+            // @ts-ignore
             if (props[i].name && props[i].name.text === type) {
                 filteredProps.push(props[i]);
             }

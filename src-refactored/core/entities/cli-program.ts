@@ -2,6 +2,7 @@ import { Command } from 'commander';
 
 import { InternalConfiguration } from './internal-configuration';
 
+// @ts-ignore
 export interface CLIProgram extends InternalConfiguration, Command {
     option(
         flags: string,

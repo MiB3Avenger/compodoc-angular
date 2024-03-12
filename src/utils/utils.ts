@@ -79,7 +79,8 @@ export function mergeTagsAndArgs(args: Array<any>, jsdoctags?: Array<any>): Arra
             ) {
                 let ret = {
                     tagName: jsdoctag.tagName,
-                    comment: jsdoctag.comment
+                    comment: jsdoctag.comment,
+                    returnType: null,
                 };
                 if (jsdoctag.typeExpression && jsdoctag.typeExpression.type) {
                     ret.returnType = kindToType(jsdoctag.typeExpression.type.kind);
@@ -391,4 +392,5 @@ export function detectIndent(str, count): string {
 
 export const INCLUDE_PATTERNS = ['**/*.ts', '**/*.tsx'];
 
+// @ts-ignore
 export const EXCLUDE_PATTERNS = ['**/.git', '**/node_modules', '**/*.d.ts', '**/*.spec.ts'];

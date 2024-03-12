@@ -18,7 +18,7 @@ export class ExportPdfEngine {
         return ExportPdfEngine.instance;
     }
 
-    public export(outputFolder) {
+    public export(outputFolder): Promise<void> {
         let fonts = {
             Roboto: {
                 normal: path.join(__dirname, '../src/resources/fonts/roboto-v15-latin-regular.ttf'),
@@ -159,6 +159,7 @@ export class ExportPdfEngine {
             });
 
             let convertedMarkdownObject = MarkdownToPdfEngine.convert(page.data);
+            // @ts-ignore
             convertedMarkdownObject.margin = [0, 10];
 
             data.push(convertedMarkdownObject);

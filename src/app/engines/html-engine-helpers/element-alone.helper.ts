@@ -11,6 +11,7 @@ export class ElementAloneHelper implements IHtmlEngineHelper {
         elements.forEach(element => {
             let foundInOneModule = false;
             modules.forEach(module => {
+                // @ts-ignore
                 module.declarations.forEach(declaration => {
                     if (declaration.id === element.id) {
                         foundInOneModule = true;
@@ -19,6 +20,7 @@ export class ElementAloneHelper implements IHtmlEngineHelper {
                         foundInOneModule = true;
                     }
                 });
+                // @ts-ignore
                 module.bootstrap.forEach(boostrapedElement => {
                     if (boostrapedElement.id === element.id) {
                         foundInOneModule = true;
@@ -27,6 +29,7 @@ export class ElementAloneHelper implements IHtmlEngineHelper {
                         foundInOneModule = true;
                     }
                 });
+                // @ts-ignore
                 module.controllers.forEach(controller => {
                     if (controller.id === element.id) {
                         foundInOneModule = true;
@@ -35,6 +38,7 @@ export class ElementAloneHelper implements IHtmlEngineHelper {
                         foundInOneModule = true;
                     }
                 });
+                // @ts-ignore
                 module.providers.forEach(provider => {
                     if (provider.id === element.id) {
                         foundInOneModule = true;

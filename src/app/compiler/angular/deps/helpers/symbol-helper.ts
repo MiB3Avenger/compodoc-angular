@@ -22,12 +22,14 @@ export class SymbolHelper {
         let type = this.getType(name);
 
         if (nsModule.length > 1) {
+            // @ts-ignore
             result.ns = nsModule[0];
             result.name = name;
             result.type = type;
             return result;
         }
         if (typeof srcFile !== 'undefined') {
+            // @ts-ignore
             result.file = ImportsUtil.getFileNameOfImport(name, srcFile);
         }
         result.name = name;
@@ -62,7 +64,7 @@ export class SymbolHelper {
      */
     public buildIdentifierName(
         node: ts.Identifier | ts.PropertyAccessExpression | ts.SpreadElement,
-        name
+        name?
     ) {
         if (ts.isIdentifier(node) && !ts.isPropertyAccessExpression(node)) {
             return `${node.text}.${name}`;
@@ -71,15 +73,23 @@ export class SymbolHelper {
         name = name ? `.${name}` : '';
 
         let nodeName = this.unknown;
+        // @ts-ignore
         if (node.name) {
+            // @ts-ignore
             nodeName = node.name.text;
+        // @ts-ignore
         } else if (node.text) {
+            // @ts-ignore
             nodeName = node.text;
         } else if (node.expression) {
+            // @ts-ignore
             if (node.expression.text) {
+                // @ts-ignore
                 nodeName = node.expression.text;
+            // @ts-ignore
             } else if (node.expression.elements) {
                 if (ts.isArrayLiteralExpression(node.expression)) {
+                    // @ts-ignore
                     nodeName = node.expression.elements.map(el => el.text).join(', ');
                     nodeName = `[${nodeName}]`;
                 }
@@ -89,6 +99,7 @@ export class SymbolHelper {
         if (ts.isSpreadElement(node)) {
             return `...${nodeName}`;
         }
+        // @ts-ignore
         return `${this.buildIdentifierName(node.expression, nodeName)}${name}`;
     }
 
@@ -106,15 +117,20 @@ export class SymbolHelper {
                 if (node.properties.length > 0) {
                     _.forEach(node.properties, property => {
                         if (property.kind && property.kind === SyntaxKind.PropertyAssignment) {
+                            // @ts-ignore
                             if (property.name.text === 'provide') {
+                                // @ts-ignore
                                 if (property.initializer.text === 'HTTP_INTERCEPTORS') {
                                     hasInterceptor = true;
                                 }
                             }
                             if (
+                                // @ts-ignore
                                 property.name.text === 'useClass' ||
+                                // @ts-ignore
                                 property.name.text === 'useExisting'
                             ) {
+                                // @ts-ignore
                                 interceptorName = property.initializer.text;
                             }
                         }
@@ -149,8 +165,10 @@ export class SymbolHelper {
         // if (ts.isCallExpression(node) && ts.isPropertyAccessExpression(node.expression)) {
         if (
             (ts.isCallExpression(node) && ts.isPropertyAccessExpression(node.expression)) ||
+            // @ts-ignore
             (ts.isNewExpression(node) && ts.isElementAccessExpression(node.expression))
         ) {
+            // @ts-ignore
             let className = this.buildIdentifierName(node.expression);
 
             // function arguments could be really complex. There are so
@@ -162,6 +180,7 @@ export class SymbolHelper {
             return text;
         } else if (ts.isPropertyAccessExpression(node)) {
             // parse expressions such as: Shared.Module
+            // @ts-ignore
             return this.buildIdentifierName(node);
         } else if (ts.isIdentifier(node)) {
             // parse expressions such as: MyComponent
@@ -174,11 +193,14 @@ export class SymbolHelper {
         } else if (ts.isSpreadElement(node)) {
             // parse expressions such as: ...MYARRAY
             // Resolve MYARRAY in imports or local file variables after full scan, just return the name of the variable
+            // @ts-ignore
             if (node.expression && node.expression.text) {
+                // @ts-ignore
                 return node.expression.text;
             }
         }
 
+        // @ts-ignore
         return node.text ? node.text : this.parseProviderConfiguration(node);
     }
 
@@ -196,7 +218,9 @@ export class SymbolHelper {
         let localNode = node;
 
         if (ts.isShorthandPropertyAssignment(localNode) && decoratorType !== 'template') {
+            // @ts-ignore
             localNode = ImportsUtil.findValueInImportOrLocalVariables(
+                // @ts-ignore
                 node.name.text,
                 srcFile,
                 decoratorType
@@ -204,39 +228,59 @@ export class SymbolHelper {
         }
         if (ts.isShorthandPropertyAssignment(localNode) && decoratorType === 'template') {
             const data = ImportsUtil.findValueInImportOrLocalVariables(
+                // @ts-ignore
                 node.name.text,
                 srcFile,
                 decoratorType
             );
+            // @ts-ignore
             return [data];
         }
 
+        // @ts-ignore
         if (localNode.initializer && ts.isArrayLiteralExpression(localNode.initializer)) {
+            // @ts-ignore
             return localNode.initializer.elements.map(x => this.parseSymbolElements(x));
         } else if (
+            // @ts-ignore
             (localNode.initializer && ts.isStringLiteral(localNode.initializer)) ||
+            // @ts-ignore
             (localNode.initializer && ts.isTemplateLiteral(localNode.initializer)) ||
+            // @ts-ignore
             (localNode.initializer &&
                 ts.isPropertyAssignment(localNode) &&
+                // @ts-ignore
                 localNode.initializer.text)
         ) {
+            // @ts-ignore
             return [localNode.initializer.text];
         } else if (
+            // @ts-ignore
             localNode.initializer &&
+            // @ts-ignore
             localNode.initializer.kind &&
+            // @ts-ignore
             (localNode.initializer.kind === SyntaxKind.TrueKeyword ||
+                // @ts-ignore
                 localNode.initializer.kind === SyntaxKind.FalseKeyword)
         ) {
+            // @ts-ignore
             return [localNode.initializer.kind === SyntaxKind.TrueKeyword ? true : false];
+        // @ts-ignore
         } else if (localNode.initializer && ts.isPropertyAccessExpression(localNode.initializer)) {
+            // @ts-ignore
             let identifier = this.parseSymbolElements(localNode.initializer);
             return [identifier];
         } else if (
+            // @ts-ignore
             localNode.initializer &&
+            // @ts-ignore
             localNode.initializer.elements &&
+            // @ts-ignore
             localNode.initializer.elements.length > 0
         ) {
             // Node replaced by ts-simple-ast & kind = 265
+            // @ts-ignore
             return localNode.initializer.elements.map(x => this.parseSymbolElements(x));
         }
     }
@@ -256,11 +300,13 @@ export class SymbolHelper {
             filteredProps = [];
 
         for (i; i < len; i++) {
+            // @ts-ignore
             if (props[i].name && props[i].name.text === decoratorType) {
                 filteredProps.push(props[i]);
             }
         }
 
+        // @ts-ignore
         return filteredProps.map(x => this.parseSymbols(x, srcFile, decoratorType)).pop() || [];
     }
 
@@ -269,6 +315,7 @@ export class SymbolHelper {
         type: string,
         multiLine?: boolean
     ): Array<ts.ObjectLiteralElementLike> {
+        // @ts-ignore
         return props.filter(node => node.name.text === type);
     }
 }

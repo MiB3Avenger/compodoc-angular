@@ -116,14 +116,12 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                 {{/if}}
                 {{#if modules}}
                     <li class="chapter modules">
-                        <a data-type="chapter-link" href="modules.html">
-                            <div class="menu-toggler linked" data-bs-toggle="collapse" ${ isNormalMode ?
-                                'data-bs-target="#modules-links"' : 'data-bs-target="#xs-modules-links"' }>
-                                <span class="icon ion-ios-archive"></span>
-                                <span class="link-name">{{t "modules" }}</span>
-                                <span class="icon {{#isNotToggle 'modules'}}ion-ios-arrow-up{{else}}ion-ios-arrow-down{{/isNotToggle}}"></span>
-                            </div>
-                        </a>
+                        <div class="simple menu-toggler" data-bs-toggle="collapse" ${ isNormalMode ? 'data-bs-target="#modules-links"' :
+                        'data-bs-target="#xs-modules-links"' }>
+                            <span class="icon ion-md-archive"></span>
+                            <span>{{t "modules" }}</span>
+                            <span class="icon {{#isNotToggle 'modules'}}ion-ios-arrow-up{{else}}ion-ios-arrow-down{{/isNotToggle}}"></span>
+                        </div>
                         <ul class="links collapse {{#isNotToggle 'modules'}}in{{/isNotToggle}}" ${ isNormalMode ? 'id="modules-links"' : 'id="xs-modules-links"' }>
                             {{#each modules}}
                             <li class="link">
@@ -220,7 +218,7 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 {{/compare}}
                             </li>
                     {{/each}}
-                </ul>
+                        </ul>
                 </li>
                 {{/if}}
                 {{#if components}}
